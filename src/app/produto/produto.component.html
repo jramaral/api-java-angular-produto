@@ -1,0 +1,135 @@
+<div class="main-container container" style="margin-top: 60px;">
+  <button style="margin: 2px" class="btn btn-success" style="margin-bottom: 5px" (click)="newProduto(template)">
+    <i class="fas fa-plus"></i> Novo Produto
+  </button>
+  <div class="row text-center" style="margin-top: 5px; display: flex;">
+
+    <div *ngFor="let prod of produtos">
+      <div class="card border-secondary" style="width: 16rem; height: 15rem; margin: 10px">
+
+        <div class="card-body text-secondary">
+          <h5>{{prod.nomeProduto}}</h5>
+          <p>Por apenas!</p>
+          <div>
+            <h6><span class="text-info"> {{prod.valorUnitario | currency : 'BRL'}}</span></h6>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; padding: 10px; justify-content: space-between">
+
+          <button class="btn btn-info" style="margin-bottom: 5px" (click)="editProduto(template, prod)"><i
+            class="fas fa-edit"></i>Editar
+          </button>
+          <button class="btn btn-danger" style="margin-bottom: 5px" (click)="excluirProduto(prod, confirm)"><i class="fas fa-trash-alt"></i>Excluir</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<button type="button" class="btn btn-primary" (click)="openModal(template)">Open modal</button>-->
+<!--<br>-->
+<!--<br>-->
+
+<div bsModal #template="bs-modal" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{modoSalvar=='post'?'Cadastrar':'Editar'}}</h4>
+        <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="registerForm">
+          <div class="form-row">
+            <div class="form-group col-md-12">
+
+              <label>Tema</label>
+              <input type="text" class="form-control"
+                     [ngClass]="{'is-invalid': registerForm.get('nomeProduto').errors && registerForm.get('nomeProduto').touched}"
+                     formControlName="nomeProduto"
+                     placeholder="Insira o nome do produto">
+              <div
+                *ngIf="registerForm.get('nomeProduto').hasError('required') && registerForm.get('nomeProduto').touched"
+                class="invalid-feedback">
+                Nome do produto é obrigatório
+              </div>
+              <div
+                *ngIf="registerForm.get('nomeProduto').hasError('minlength') && registerForm.get('nomeProduto').touched"
+                class="invalid-feedback">
+                Nome do produto deve te no mínimo 4 caracteres
+              </div>
+              <div
+                *ngIf="registerForm.get('nomeProduto').hasError('maxlength') && registerForm.get('nomeProduto').touched"
+                class="invalid-feedback">
+                Nome do produto deve ter no máximo 50 caracteres
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label>Quantidade</label>
+              <input type="number" class="form-control"
+                     [ngClass]="{'is-invalid': registerForm.get('quantidade').errors && registerForm.get('quantidade').touched}"
+                     formControlName="quantidade">
+              <div *ngIf="registerForm.get('quantidade').hasError('required') && registerForm.get('quantidade').touched"
+                   class="invalid-feedback">
+                Quantidade é obrigatorio
+              </div>
+            </div>
+            <div class="form-group col-md-3">
+              <label>Valor Unitário</label>
+              <input type="text" currencyMask
+                     [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',', align: 'left' }"
+                     class="form-control"
+                     [ngClass]="{'is-invalid': registerForm.get('valorUnitario').errors && registerForm.get('valorUnitario').touched}"
+                     formControlName="valorUnitario" placeholder="R$ 0,00">
+
+            </div>
+          </div>
+
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="template.hide()">
+          Fechar
+        </button>
+        <button class="btn btn-primary" [disabled]="!registerForm.valid" (click)="salvarAlteracao(template)">
+          Salvar Alterações
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--modal confirm delete-->
+<div bsModal #confirm="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">
+          Deletando Produto
+        </h4>
+        <button type="button" class="close pull-right" (click)="confirm.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+             <p>{{bodyDeletarProduto}}</p>
+      </div>
+      <div class="modal-footer btn-group d-flex">
+        <button type="button" class="btn btn-outline-primary" (click)="confirm.hide()">
+          CENCELAR
+        </button>
+        <button type="button" class="btn btn-outline-danger" (click)="confirmeDelete(confirm)">
+          DELETAR
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
