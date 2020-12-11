@@ -32,6 +32,7 @@ public class ProdutoResource {
     @Autowired
     ProdutoRepository produtoRepository;
 
+    /*Coloquei aqui só para demonstrar que poderia ser feito separando a responsabilidade em uuma outra classe */
     @Autowired
     private ProdutoService produtoService;
 
